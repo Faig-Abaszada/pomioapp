@@ -49,6 +49,11 @@ export function useTimer(initialMinutes: number, onComplete?: () => void) {
     isRunning.value = false;
   }
 
+  function changeDuration(minutes: number) {
+    // TODO: remainingSeconds.value-nu minutes * 60-a təyin et
+    remainingSeconds.value = minutes * 60;
+  }
+
   onUnmounted(() => {
     // TODO 7: intervalId varsa clearInterval et (komponent silinəndə "saatı söndür")
     if (intervalId) {
@@ -65,7 +70,7 @@ export function useTimer(initialMinutes: number, onComplete?: () => void) {
     // TODO 3: hər ikisini 2 rəqəmə tamamla ("5" → "05") → String(...).padStart(2, '0')
     // TODO 4: "mm:ss" formatında qaytar → `${mm}:${ss}`
     const totalMinutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
-    const otherSeconds = String(totalSeconds % 60).padStart(2, '0');
+    const otherSeconds = String(Math.round(totalSeconds % 60)).padStart(2, '0');
 
     return `${totalMinutes}:${otherSeconds}`
 
@@ -78,7 +83,8 @@ export function useTimer(initialMinutes: number, onComplete?: () => void) {
     start,
     pause,
     stop,
-    formattedTime
-  }
+    formattedTime,
+    changeDuration
+  };
 
 }

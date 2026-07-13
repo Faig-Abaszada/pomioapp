@@ -3,10 +3,10 @@ export function usePomodoro() {
   const completedWorkSessions = ref(0)
 
   const durations = {
-    work: 25,
-    shortBreak: 5,
-    longBreak: 15,
-  }
+    work: 10 / 60, // 10 san
+    shortBreak: 2 / 60, // 2 san
+    longBreak: 5 / 60, // 5 san
+  };
 
   function nextPhase() {
     if (phase.value === 'work') {

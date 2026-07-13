@@ -1,8 +1,16 @@
 <script setup lang="ts">
 // 🔬 DEMO — state machine test (sonra silinəcək)
-const { phase, completedWorkSessions, nextPhase } = usePomodoro()
+const { phase, completedWorkSessions, nextPhase, durations } = usePomodoro()
 
-const { remainingSeconds, isRunning, formattedTime, start, pause, stop } = useTimer(0.1, nextPhase)
+function handleComplete() {
+  // TODO 1: nextPhase() çağır — faza dəyişsin (work → shortBreak)
+  // TODO 2: changeDuration(durations[phase.value]) — saatı yeni fazanın müddətinə qur
+  nextPhase();
+  changeDuration(durations[phase.value]);
+}
+
+const { remainingSeconds, isRunning, formattedTime, start, pause, stop, changeDuration } = useTimer(durations.work, handleComplete)
+
 </script>
 
 <template>
