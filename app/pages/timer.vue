@@ -11,6 +11,7 @@ function handleComplete() {
 
 const { remainingSeconds, isRunning, formattedTime, start, pause, stop, changeDuration } = useTimer(durations.work, handleComplete)
 
+const { totalFocusMinutes, sessionsUntilLongBreak } = useStats(completedWorkSessions, durations.work)
 </script>
 
 <template>
@@ -27,5 +28,11 @@ const { remainingSeconds, isRunning, formattedTime, start, pause, stop, changeDu
     <p style="font-size:24px">Faza: <b>{{ phase }}</b></p>
     <p>Bitən iş sessiyaları: {{ completedWorkSessions }}</p>
     <button @click="nextPhase" style="font-size:18px; padding:8px 16px">nextPhase →</button>
+
+    <hr style="margin:32px 0">
+
+    <!-- 🔬 Slice 5 — stats -->
+    <p>Toplam fokus (dəq): <b>{{ totalFocusMinutes }}</b></p>
+    <p>Uzun fasiləyə qalıb: <b>{{ sessionsUntilLongBreak }}</b> sessiya</p>
   </div>
 </template>
