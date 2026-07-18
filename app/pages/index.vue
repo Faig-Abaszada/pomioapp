@@ -5,10 +5,10 @@
     })
 
 
-    // const {data: quote} = await useAsyncData('custom_keyyyyyy', () => 
-    //   $fetch('https://dummyjson.com/quotes/random')
-    // );
-    const quote = await $fetch('https://dummyjson.com/quotes/random')
+    // useFetch = SSR-aware: serverdə bir dəfə çəkir → nəticəni payload-a key ilə yazır
+    // → brauzer hydration-da təzədən çəkmir (ikiqat sorğu + mismatch yox).
+    // (Çılpaq $fetch setup-da bunu etmir → boşluq #9-da 4 simptom canlı görüldü.)
+    const { data: quote } = await useFetch('https://dummyjson.com/quotes/random')
     
 </script>
 <template>
