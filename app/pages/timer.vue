@@ -33,6 +33,21 @@ const progress = computed(() => {
 });
 
 const { totalFocusMinutes, sessionsUntilLongBreak } = useStats(completedWorkSessions, durations.value.work);
+
+const isFullScreen = ref(false);
+async function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    await document.documentElement.requestFullscreen();
+  } else {
+    await document.exitFullscreen();
+  }
+}
+function syncFullscreen() {
+  isFullScreen.value = !!document.fullscreenElement;
+}
+
+onMounted(() => document.addEventListener('fullscreenchange', syncFullscreen));
+onUnmounted(() => document.removeEventListener('fullscreenchange', syncFullscreen));
 </script>
 
 <template>
@@ -48,6 +63,9 @@ const { totalFocusMinutes, sessionsUntilLongBreak } = useStats(completedWorkSess
       <button v-if="!isRunning" class="btn btn--primary" @click="start">Start</button>
       <button v-else class="btn" @click="pause">Pause</button>
       <button class="btn btn--ghost" @click="stop">Reset</button>
+      <button class="btn btn--ghost" @click="toggleFullScreen">
+        {{ isFullScreen ? 'Exit full screen' : 'Full screen' }}
+      </button>
     </div>
 
     <div class="stats">
