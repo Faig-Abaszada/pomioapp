@@ -5,6 +5,7 @@ export function useSettings() {
     theme: 'dark',
     focusMinutes: 25,
     breakMinutes: 5,
+    longBreakMinutes: 15,
   }));
 
   onMounted(() => {

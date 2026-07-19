@@ -3,12 +3,20 @@ const { phase, completedWorkSessions, durations, nextPhase } = usePomodoro();
 
 function handleComplete() {
   nextPhase();
-  changeDuration(durations[phase.value]);
+  changeDuration(durations.value[phase.value]);
 }
 
 const { remainingSeconds, isRunning, formattedTime, start, pause, stop, changeDuration } = useTimer(
-  durations.work,
+  durations.value.work,
   handleComplete,
+);
+
+// settings dəyişəndə (və timer dayanıbsa) cari fazanı yeni müddətə sıfırla
+watch(
+  () => durations.value[phase.value],
+  (minutes) => {
+    if (!isRunning.value) changeDuration(minutes);
+  },
 );
 
 const phaseLabel = computed(() => {
@@ -16,10 +24,8 @@ const phaseLabel = computed(() => {
   return map[phase.value];
 });
 
-// cari fazanın tam müddəti (saniyə) — durations dəqiqədədir
-const totalSeconds = computed(() => durations[phase.value] * 60);
+const totalSeconds = computed(() => durations.value[phase.value] * 60);
 
-// keçən hissə: 0 → 1
 const progress = computed(() => {
   const total = totalSeconds.value;
   if (!total) return 0;

@@ -1,12 +1,13 @@
 export function usePomodoro() {
+  const settings = useSettings();
   const phase = ref<'work' | 'shortBreak' | 'longBreak'>('work');
   const completedWorkSessions = ref(0);
 
-  const durations = {
-    work: 10 / 60, // 10 san
-    shortBreak: 2 / 60, // 2 san
-    longBreak: 5 / 60, // 5 san
-  };
+  const durations = computed(() => ({
+    work: settings.value.focusMinutes,
+    shortBreak: settings.value.breakMinutes,
+    longBreak: settings.value.longBreakMinutes,
+  }));
 
   function nextPhase() {
     if (phase.value === 'work') {
