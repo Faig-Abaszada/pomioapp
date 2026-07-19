@@ -6,20 +6,35 @@ function handleComplete() {
   changeDuration(durations[phase.value]);
 }
 
-const { isRunning, formattedTime, start, pause, stop, changeDuration } = useTimer(durations.work, handleComplete);
+const { remainingSeconds, isRunning, formattedTime, start, pause, stop, changeDuration } = useTimer(
+  durations.work,
+  handleComplete,
+);
 
-// state → görünən mətn
 const phaseLabel = computed(() => {
   const map = { work: 'Focus', shortBreak: 'Short break', longBreak: 'Long break' };
   return map[phase.value];
+});
+
+// cari fazanın tam müddəti (saniyə) — durations dəqiqədədir
+const totalSeconds = computed(() => durations[phase.value] * 60);
+
+// keçən hissə: 0 → 1
+const progress = computed(() => {
+  const total = totalSeconds.value;
+  if (!total) return 0;
+  return (total - remainingSeconds.value) / total;
 });
 </script>
 
 <template>
   <main class="timer">
-    <p class="phase">{{ phaseLabel }}</p>
-
-    <div class="time">{{ formattedTime }}</div>
+    <div class="ring" :style="{ '--deg': progress * 360 + 'deg' }">
+      <div class="ring-inner">
+        <p class="phase">{{ phaseLabel }}</p>
+        <div class="time">{{ formattedTime }}</div>
+      </div>
+    </div>
 
     <div class="controls">
       <button v-if="!isRunning" class="btn btn--primary" @click="start">Start</button>
@@ -42,6 +57,27 @@ const phaseLabel = computed(() => {
   background: var(--bg);
   color: var(--ink);
 }
+.ring {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  /* keçən hissə accent, qalan track — sərt kəsim var(--deg)-də */
+  background: conic-gradient(var(--accent) var(--deg), var(--track) var(--deg));
+  display: grid;
+  place-items: center;
+  transition: background 0.3s linear;
+}
+.ring-inner {
+  width: 264px;
+  height: 264px;
+  border-radius: 50%;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
 .phase {
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -50,9 +86,9 @@ const phaseLabel = computed(() => {
   margin: 0;
 }
 .time {
-  font-size: 96px;
+  font-size: 72px;
   font-weight: 600;
-  font-variant-numeric: tabular-nums; /* rəqəmlər titrəmir */
+  font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 .controls {
