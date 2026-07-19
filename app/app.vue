@@ -4,7 +4,7 @@ const settings = useSettings();
 useHead({
   htmlAttrs: {
     'data-theme': computed(() => settings.value.theme),
-  }
+  },
 });
 </script>
 <template>

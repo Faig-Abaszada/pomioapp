@@ -1,38 +1,88 @@
 <script setup lang="ts">
-// 🔬 DEMO — state machine test (sonra silinəcək)
-const { phase, completedWorkSessions, nextPhase, durations } = usePomodoro()
+const { phase, completedWorkSessions, durations, nextPhase } = usePomodoro();
 
 function handleComplete() {
-  // TODO 1: nextPhase() çağır — faza dəyişsin (work → shortBreak)
-  // TODO 2: changeDuration(durations[phase.value]) — saatı yeni fazanın müddətinə qur
   nextPhase();
   changeDuration(durations[phase.value]);
 }
 
-const { remainingSeconds, isRunning, formattedTime, start, pause, stop, changeDuration } = useTimer(durations.work, handleComplete)
+const { isRunning, formattedTime, start, pause, stop, changeDuration } = useTimer(durations.work, handleComplete);
 
-const { totalFocusMinutes, sessionsUntilLongBreak } = useStats(completedWorkSessions, durations.work)
+// state → görünən mətn
+const phaseLabel = computed(() => {
+  const map = { work: 'Focus', shortBreak: 'Short break', longBreak: 'Long break' };
+  return map[phase.value];
+});
 </script>
 
 <template>
-  <div style="text-align:center; padding:40px; font-family:monospace">
-    <h1 style="font-size:64px">{{ formattedTime }}</h1>
-    <p>{{ isRunning ? 'işləyir' : 'dayanıb' }}</p>
-    <button @click="start">Start</button>
-    <button @click="pause">Pause</button>
-    <button @click="stop">Stop</button>
+  <main class="timer">
+    <p class="phase">{{ phaseLabel }}</p>
 
-    <hr style="margin:32px 0">
+    <div class="time">{{ formattedTime }}</div>
 
-    <!-- 🔬 state machine test -->
-    <p style="font-size:24px">Faza: <b>{{ phase }}</b></p>
-    <p>Bitən iş sessiyaları: {{ completedWorkSessions }}</p>
-    <button @click="nextPhase" style="font-size:18px; padding:8px 16px">nextPhase →</button>
+    <div class="controls">
+      <button v-if="!isRunning" class="btn btn--primary" @click="start">Start</button>
+      <button v-else class="btn" @click="pause">Pause</button>
+      <button class="btn btn--ghost" @click="stop">Reset</button>
+    </div>
 
-    <hr style="margin:32px 0">
-
-    <!-- 🔬 Slice 5 — stats -->
-    <p>Toplam fokus (dəq): <b>{{ totalFocusMinutes }}</b></p>
-    <p>Uzun fasiləyə qalıb: <b>{{ sessionsUntilLongBreak }}</b> sessiya</p>
-  </div>
+    <p class="meta">Session {{ completedWorkSessions + 1 }}</p>
+  </main>
 </template>
+
+<style scoped>
+.timer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  background: var(--bg);
+  color: var(--ink);
+}
+.phase {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+}
+.time {
+  font-size: 96px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums; /* rəqəmlər titrəmir */
+  line-height: 1;
+}
+.controls {
+  display: flex;
+  gap: var(--space-2);
+}
+.btn {
+  padding: 12px 28px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line2);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 16px;
+  cursor: pointer;
+}
+.btn:hover {
+  background: var(--hover);
+}
+.btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.btn--ghost {
+  background: transparent;
+  color: var(--muted);
+}
+.meta {
+  color: var(--faint);
+  font-size: 13px;
+  margin: 0;
+}
+</style>

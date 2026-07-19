@@ -1,10 +1,9 @@
 <script setup lang="ts">
-const settings = useSettings()
+const settings = useSettings();
 
 function toggleTheme() {
-  settings.value.theme = settings.value.theme === 'light' ? 'dark' : 'light'
+  settings.value.theme = settings.value.theme === 'light' ? 'dark' : 'light';
 }
-
 </script>
 
 <template>
@@ -13,6 +12,6 @@ function toggleTheme() {
     <p>Theme: {{ settings.theme }}</p>
     <p>Focus: {{ settings.focusMinutes }} min</p>
     <p>Break: {{ settings.breakMinutes }} min</p>
-      <button @click="toggleTheme">Toggle theme</button>
+    <button @click="toggleTheme">Toggle theme</button>
   </main>
 </template>

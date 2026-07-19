@@ -10,8 +10,8 @@ export function useSettings() {
   onMounted(() => {
     const storedSettings = localStorage.getItem(STORAGE_KEY);
     if (storedSettings) {
-        const parsedSettings = JSON.parse(storedSettings);
-        Object.assign(settings.value, parsedSettings);
+      const parsedSettings = JSON.parse(storedSettings);
+      Object.assign(settings.value, parsedSettings);
     }
   });
 

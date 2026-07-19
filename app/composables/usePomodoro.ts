@@ -1,6 +1,6 @@
 export function usePomodoro() {
-  const phase = ref<'work' | 'shortBreak' | 'longBreak'>('work')
-  const completedWorkSessions = ref(0)
+  const phase = ref<'work' | 'shortBreak' | 'longBreak'>('work');
+  const completedWorkSessions = ref(0);
 
   const durations = {
     work: 10 / 60, // 10 san
@@ -10,12 +10,12 @@ export function usePomodoro() {
 
   function nextPhase() {
     if (phase.value === 'work') {
-      completedWorkSessions.value++
-      phase.value = completedWorkSessions.value % 4 === 0 ? 'longBreak' : 'shortBreak'
+      completedWorkSessions.value++;
+      phase.value = completedWorkSessions.value % 4 === 0 ? 'longBreak' : 'shortBreak';
     } else {
-      phase.value = 'work'
+      phase.value = 'work';
     }
   }
 
-  return { phase, completedWorkSessions, durations, nextPhase }
+  return { phase, completedWorkSessions, durations, nextPhase };
 }

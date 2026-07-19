@@ -3,8 +3,7 @@ export function useTimer(initialMinutes: number, onComplete?: () => void) {
   const isRunning = ref(false);
   const pauseCount = ref(0);
 
-
-  let intervalId: ReturnType<typeof setInterval> | null = null
+  let intervalId: ReturnType<typeof setInterval> | null = null;
 
   function start() {
     if (isRunning.value) return;
@@ -20,7 +19,7 @@ export function useTimer(initialMinutes: number, onComplete?: () => void) {
       if (remainingSeconds.value <= 0) {
         clearInterval(intervalId);
         isRunning.value = false;
-        onComplete?.()
+        onComplete?.();
       }
     }, 1000);
   }
@@ -59,9 +58,7 @@ export function useTimer(initialMinutes: number, onComplete?: () => void) {
     if (intervalId) {
       clearInterval(intervalId);
     }
-
-  })
-
+  });
 
   const formattedTime = computed(() => {
     const totalSeconds = remainingSeconds.value;
@@ -72,9 +69,8 @@ export function useTimer(initialMinutes: number, onComplete?: () => void) {
     const totalMinutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
     const otherSeconds = String(Math.round(totalSeconds % 60)).padStart(2, '0');
 
-    return `${totalMinutes}:${otherSeconds}`
-
-  })
+    return `${totalMinutes}:${otherSeconds}`;
+  });
 
   return {
     remainingSeconds,
@@ -84,7 +80,6 @@ export function useTimer(initialMinutes: number, onComplete?: () => void) {
     pause,
     stop,
     formattedTime,
-    changeDuration
+    changeDuration,
   };
-
 }
