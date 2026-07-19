@@ -11,7 +11,7 @@ const { remainingSeconds, isRunning, formattedTime, start, pause, stop, changeDu
   handleComplete,
 );
 
-// settings dəyişəndə (və timer dayanıbsa) cari fazanı yeni müddətə sıfırla
+// Reset the display to the new duration when settings change while idle.
 watch(
   () => durations.value[phase.value],
   (minutes) => {
@@ -31,6 +31,8 @@ const progress = computed(() => {
   if (!total) return 0;
   return (total - remainingSeconds.value) / total;
 });
+
+const { totalFocusMinutes, sessionsUntilLongBreak } = useStats(completedWorkSessions, durations.value.work);
 </script>
 
 <template>
@@ -48,7 +50,16 @@ const progress = computed(() => {
       <button class="btn btn--ghost" @click="stop">Reset</button>
     </div>
 
-    <p class="meta">Session {{ completedWorkSessions + 1 }}</p>
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-value">{{ totalFocusMinutes }}</span>
+        <span class="stat-label">min focused</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ sessionsUntilLongBreak }}</span>
+        <span class="stat-label">until long break</span>
+      </div>
+    </div>
   </main>
 </template>
 
@@ -67,7 +78,6 @@ const progress = computed(() => {
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  /* keçən hissə accent, qalan track — sərt kəsim var(--deg)-də */
   background: conic-gradient(var(--accent) var(--deg), var(--track) var(--deg));
   display: grid;
   place-items: center;
@@ -122,9 +132,26 @@ const progress = computed(() => {
   background: transparent;
   color: var(--muted);
 }
-.meta {
-  color: var(--faint);
-  font-size: 13px;
-  margin: 0;
+.stats {
+  display: flex;
+  gap: var(--space-5);
+  margin-top: var(--space-2);
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.stat-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 </style>
